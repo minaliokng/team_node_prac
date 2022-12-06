@@ -44,7 +44,7 @@ router.route('/:postId')
 
     try {
       const comment = await Comment.create({
-        content: req.body.content,
+        comment: req.body.comment,
         posts_id: req.params.postId,
         users_id: userId.userId
       })
@@ -60,7 +60,7 @@ router.route('/:commentId')
     try {
       const comment = await Comment.update(
         {
-          content: req.body.content,
+          comment: req.body.comment,
         },
         {
           where: {
