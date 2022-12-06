@@ -30,7 +30,7 @@ router.route('/')
     try {
       const post = await Post.create({
         title: req.body.title,
-        content: req.body.context,
+        content: req.body.content,
         poster: userId.userId
       })
       res.status(200).send('게시글작성 성공~!');
