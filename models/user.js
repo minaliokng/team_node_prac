@@ -1,12 +1,6 @@
 const Sequelize = require('sequelize');
 
-function isValidNickname(nick) {
-  if (nick.length > 3) {
-    return true;
-  } else {
-    return false;
-  }
-}
+
 
 
 module.exports = class User extends Sequelize.Model {
@@ -16,13 +10,7 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.STRING(20),
         allowNull: false,
         unique: true,
-        validate: {
-          isNickname(nickname) {
-            if (!isValidNickname(nickname)) {
-              throw new Error('닉네임 형식이 맞지 않습니다.');
-            }
-          }
-        }
+
       },
       password: {
         type: Sequelize.STRING(25),
