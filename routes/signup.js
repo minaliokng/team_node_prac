@@ -34,7 +34,7 @@ router.route('/')
         return res.status(412).send('패스워드 형식이 일치하지 않습니다')
       };
 
-      if (!isId(nickname)) {
+      if (isId(nickname)) {
         return res.status(412).send('아이디 형식이 일치하지 않습니다.')
       }
 
