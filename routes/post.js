@@ -45,13 +45,23 @@ router.route('/like')
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
     const userId = jwt.verify(authToken, "sparta")
+
+    let data = []
     try {
       const likes = await Like.findAll({
         where: {
           likerId: userId.userId
         }
       })
-      res.status(200).send(likes.sort())
+      const a = await Promise.all(likes.map(a => {
+        return Post.findOne({
+          where: {
+            id: a.dataValues.postId
+          }
+        })
+      }))
+      console.log(a)
+      res.status(200).send(a)
     } catch (err) {
       console.error(err);
       next(err);
