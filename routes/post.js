@@ -89,7 +89,7 @@ router.route('/:postId')
         await Post.update(
           {
             title: req.body.title,
-            context: req.body.context
+            content: req.body.content
           },
           {
             where: { id: req.params.postId }
