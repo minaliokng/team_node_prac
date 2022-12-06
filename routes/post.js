@@ -26,7 +26,7 @@ router.route('/')
   .post(authMiddleWare, async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
     try {
       const post = await Post.create({
         title: req.body.title,
@@ -44,7 +44,7 @@ router.route('/like')
   .get(authMiddleWare, async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
     try {
       const likes = await Like.findAll({
         where: {
@@ -78,7 +78,7 @@ router.route('/:postId')
   .put(async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
     const post = await Post.findOne({
       where: {
         id: req.params.postId
@@ -108,7 +108,7 @@ router.route('/:postId')
   .delete(async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
     const post = await Post.findOne({
       where: {
         id: req.params.postId
@@ -136,7 +136,7 @@ router.route('/:postId/like')
   .put(authMiddleWare, async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
     try {
       const likeExists = await Like.findOne({
         where: {

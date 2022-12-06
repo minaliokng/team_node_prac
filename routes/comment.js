@@ -40,7 +40,7 @@ router.route('/:postId')
   .post(authMiddleWare, async (req, res, next) => {
     const { authorization } = req.headers;
     const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, "sparta")
 
     try {
       const comment = await Comment.create({
