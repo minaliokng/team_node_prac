@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../models/user')
 
 function isId(value) {
-  var regExp = /^[a-z]+[a-z0-9]{3,19}$/g;
+  var regExp = /^[A-Z]+[a-z0-9]{3,19}$/g;
 
   return regExp.test(value);
 }

@@ -26,7 +26,7 @@ router.route('/')
       if (user.password !== password) {
         return res.status(400).send('닉네임 또는 패스워드를 확인해주세요. ^_^;')
       }
-      const token = jwt.sign({ userId: user.id }, process.env.MY_SECRET_KEY)
+      const token = jwt.sign({ userId: user.id }, 'sparta')
       // return res.status(200).send({ token: jwt.sign({ userId: user.nickname }, process.env.MY_SECRET_KEY) })
       res.cookie('token', token, { httpOnly: true, });
       res.json({ 'token': token })

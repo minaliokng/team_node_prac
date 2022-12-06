@@ -12,7 +12,7 @@ module.exports = async function isUser(req, res, next) {
     }
   })
 
-  const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY);
+  const userId = jwt.verify(authToken, 'sparta');
   if (userId.userId === commentUserId.users_id) {
     next()
   } else {

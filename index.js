@@ -13,7 +13,7 @@ module.exports = async function authMiddleWare(req, res, next) {
   }
 
   try {
-    const userId = jwt.verify(authToken, process.env.MY_SECRET_KEY)
+    const userId = jwt.verify(authToken, 'sparta')
     console.log(userId);
     const user = await User.findOne({
       where: {
