@@ -26,7 +26,7 @@ router.route('/:postId')
         where: {
           posts_id: req.params.postId
         },
-        attributes: ['context', 'created_at']
+        attributes: ['content', 'created_at']
       })
       if (comments.length == 0) {
         return res.status(400).send('존재하지 않는 게시물입니다.')
@@ -44,7 +44,7 @@ router.route('/:postId')
 
     try {
       const comment = await Comment.create({
-        context: req.body.context,
+        content: req.body.content,
         posts_id: req.params.postId,
         users_id: userId.userId
       })
@@ -60,7 +60,7 @@ router.route('/:commentId')
     try {
       const comment = await Comment.update(
         {
-          context: req.body.context,
+          content: req.body.content,
         },
         {
           where: {
