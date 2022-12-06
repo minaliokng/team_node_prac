@@ -26,7 +26,7 @@ router.route('/:postId')
         where: {
           posts_id: req.params.postId
         },
-        attributes: ['content', 'created_at']
+        attributes: ['comment', 'created_at']
       })
       if (comments.length == 0) {
         return res.status(400).send('존재하지 않는 게시물입니다.')
