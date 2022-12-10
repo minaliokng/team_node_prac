@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 
 const { sequelize } = require('./models');
-const indexRouter = require('./routes/index');
 const signupRouter = require('./routes/signup');
 const loginRouter = require("./routes/login");
 const postRouter = require('./routes/post');
@@ -37,7 +36,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-app.use('/', indexRouter);
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/posts', postRouter);

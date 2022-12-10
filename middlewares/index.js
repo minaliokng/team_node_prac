@@ -1,11 +1,10 @@
 const jwt = require("jsonwebtoken");
-const User = require('./models/user');
+const User = require('../models/user');
 
 module.exports = async function authMiddleWare(req, res, next) {
-  const { authorization } = req.headers;
-  const [authType, authToken] = authorization.split(" ");
+  const authorization = req.cookies.token;
 
-  if (authType !== 'Bearer' || !authToken) {
+  if (!authorization) {
     res.status(400).json({
       errorMessage: "로그인 후 사용해주세요."
     });
@@ -13,7 +12,7 @@ module.exports = async function authMiddleWare(req, res, next) {
   }
 
   try {
-    const userId = jwt.verify(authToken, 'sparta')
+    const userId = jwt.verify(authorization, 'sparta')
     console.log(userId);
     const user = await User.findOne({
       where: {
