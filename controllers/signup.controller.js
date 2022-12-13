@@ -1,4 +1,4 @@
-const User = require('../models/user')
+const {User} = require('../models')
 
 function isId(value) {
   var regExp = /^[A-Z]+[a-z0-9]{3,19}$/g;
@@ -13,9 +13,10 @@ class SignupController {
       const password = req.body.password;
       const confirm = req.body.confirm;
 
+      console.log(User)
       const user_nick = await User.findOne({
         where: {
-          nickname: nickname
+          nickname
         }
       })
 
@@ -37,8 +38,8 @@ class SignupController {
 
 
       const user = await User.create({
-        nickname: nickname,
-        password: password,
+        nickname,
+        password,
       })
 
       console.log(user);

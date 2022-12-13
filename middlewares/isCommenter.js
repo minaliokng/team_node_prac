@@ -1,7 +1,7 @@
-const Comment = require("../models/comment");
+const {Comment} = require("../models");
 const jwt = require("jsonwebtoken");
 
-module.exports = async function isUser(req, res, next) {
+module.exports = async function isCommenter(req, res, next) {
   const authorization = req.cookies.token;
 
   const commentUserId = await Comment.findOne({
@@ -11,6 +11,7 @@ module.exports = async function isUser(req, res, next) {
   })
 
   const userId = jwt.verify(authorization, 'sparta');
+  console.log(userId, commentUserId)
   if (userId.userId === commentUserId.users_id) {
     next()
   } else {

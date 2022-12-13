@@ -23,9 +23,9 @@ class CommentController {
   }
 
   createComment = async (req, res, next) => {
-    const { authorization } = req.headers;
-    const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, "sparta")
+    const authorization = req.cookies.token;
+
+    const userId = jwt.verify(authorization, "sparta")
 
     try {
       const comment = await Comment.create({

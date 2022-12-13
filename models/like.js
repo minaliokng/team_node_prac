@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 module.exports = class Like extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      likerId: {
+      userId: {
         type: Sequelize.INTEGER(10),
         allowNull: false,
       },
@@ -21,5 +21,9 @@ module.exports = class Like extends Sequelize.Model {
         charset: 'utf8',
         collate: 'utf8_general_ci'
       })
+  }
+  static associate(db) {
+    db.User.belongsTo(db.Post, { foreignKey: 'postId', sourceKey: 'postId' });
+    db.User.belongsTo(db.User, { foreignKey: 'userId', sourceKey: 'userId' });
   }
 }
