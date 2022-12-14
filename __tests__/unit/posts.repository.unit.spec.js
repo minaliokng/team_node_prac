@@ -9,7 +9,9 @@ let mockPostsModel = {
 }
 
 let mockLikeModel = {
-  findAll: jest.fn()
+  findAll: jest.fn(),
+  create: jest.fn(),
+  destroy: jest.fn()
 }
 
 let postRepository = new PostRepository(mockPostsModel, mockLikeModel);
@@ -17,16 +19,16 @@ let postRepository = new PostRepository(mockPostsModel, mockLikeModel);
 describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-  })
+  });
 
   test('posts.repository.findAllPost', async () => {
     mockPostsModel.findAll = jest.fn(() => {
-      return "findAll String"
+      return "findAllPost"
     });
     const posts = await postRepository.findAllPost();
 
     expect(postRepository.postsModel.findAll).toHaveBeenCalledTimes(1);
-    expect(posts).toBe("findAll String");
+    expect(posts).toBe("findAllPost");
   });
 
   test('posts.repository.createPost', async () => {
@@ -94,31 +96,39 @@ describe('Layered Architecture Pattern Posts Repository Unit Test', () => {
 
   test('posts.repository.deletePost', async () => {
     mockPostsModel.destroy = jest.fn(() => {
-      
+      return;
     });
-
-    const post = await postRepository.deletePost("postId");
+    const post = await postRepository.deletePost(1);
 
     expect(postRepository.postsModel.destroy).toHaveBeenCalledTimes(1);
-    expect(post).toBeUndefined()
+    expect(post).toEqual();
   });
 
-  test('posts.repository.updateLike', async () => {
-    mockPostsModel.update = jest.fn(() => {
-      return ;
-    });
-    mockLikeModel.destroy = jest.fn(() => {
-      return ;
-    });
+  test('posts.repository.addLike', async () => {
     mockLikeModel.create = jest.fn(() => {
-      return "same";
+      return;
     })
+    mockPostsModel.update = jest.fn(() => {
+      return;
+    })
+    const post = await postRepository.addLike(1, 1, 1);
 
-    const post = await postRepository.updateLike("postId", "likes", -1, "userId");
+    expect(postRepository.postsModel.update).toHaveBeenCalledTimes(1);
+    expect(postRepository.likesModel.create).toHaveBeenCalledTimes(1);
+    expect(post).toBe();
+  });
 
-    expect(mockPostsModel.update).toHaveBeenCalledTimes(1);
-    // expect(postRepository.likesModel.create).toHaveBeenCalledTimes(1);
+  test('posts.repository.deleteLike', async () => {
+    mockLikeModel.destroy = jest.fn(() => {
+      return;
+    })
+    mockPostsModel.update = jest.fn(() => {
+      return;
+    })
+    const post = await postRepository.deleteLike(1, 1, 1);
+
+    expect(postRepository.postsModel.update).toHaveBeenCalledTimes(1);
     expect(postRepository.likesModel.destroy).toHaveBeenCalledTimes(1);
-    expect(post).toBe()
+    expect(post).toBe();
   });
 });

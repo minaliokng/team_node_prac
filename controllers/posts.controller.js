@@ -13,10 +13,13 @@ class PostsController {
 
   createPost = async (req, res, next) => {
     try {
+      if(!res.locals.userId || !req.body.title || !req.body.content){
+        res.status(200).json({errorMessage: '잘못된 형식입니다.'});
+        throw new Error('InvalidParamsError');
+      }
       await this.postService.createPost(res.locals.userId, req.body.title, req.body.content);
-      res.status(200).send('게시글작성 성공~!');
+      res.status(200).json({message: '게시글작성 성공~!'});
     } catch (err) {
-      console.error(err);
       next(err);
     }
   }
@@ -25,7 +28,6 @@ class PostsController {
     try {
       return res.status(200).json({ Data: await this.postService.getLike(res.locals.userId) });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   }
@@ -36,29 +38,33 @@ class PostsController {
 
       res.status(200).json({ Data: post });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   }
 
   updatePost = async (req, res, next) => {
+    const userId = res.locals.userId;
+    const {title, content} = req.body;
+
     try {
-      await this.postService.updatePost(req.params.postId, req.body.title, req.body.content);
-      res.status(200).send('수정 성공~!');
-    } catch (err) {
-      console.error(err);
-      next(err);
+      const result = await this.postService.updatePost(userId, req.params.postId, title, content);
+      return res.status(result.code).json({message: result.message});
+    }
+    catch {
+      return res.status(404).json({ errorMessage: "존재하지 않는 게시글입니다." })
     }
   }
 
   deletePost = async (req, res, next) => {
+    const userId = res.locals.userId;
+
     try {
-      await this.postService.deletePost(req.params.postId);
-      res.status(200).json('삭제 성공');
+      const result = await this.postService.deletePost(userId, req.params.postId);
+      
+      return res.status(result.code).json({message: result.message});
     }
-    catch (err) {
-      console.error(err);
-      next(err);
+    catch {
+      return res.status(404).json({ errorMessage: "존재하지 않는 게시글입니다." })
     }
   }
 

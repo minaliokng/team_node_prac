@@ -5,7 +5,7 @@ class PostRepository {
   }
 
   findAllPost = async () => {
-    return await this.postsModel.findAll({attribute: {}});
+    return await this.postsModel.findAll();
   }
 
   createPost = async (userId, title, content) => {
@@ -47,6 +47,10 @@ class PostRepository {
     });
   }
 
+  getLiked = async (userId, postId) => {
+    return await this.likesModel.findOne({ where: { userId, postId } });
+  }
+
   updatePost = async (postId, title, content) => {
     return await this.postsModel.update(
       {
@@ -60,49 +64,35 @@ class PostRepository {
   }
 
   deletePost = async (postId) => {
-    await this.postsModel.destroy(
+    return await this.postsModel.destroy(
       {
         where: { postId }
       }
     )
   }
 
-  updateLike = async (postId, likes, stat, userId) => {
-    if(stat == -1) {
-      await this.postsModel.update(
-        {
-          likes: likes -= 1
-        },
-        {
-          where: {
-            postId
-          }
-        }
-      )
-      await this.likesModel.destroy({
-        where: {
-          postId,
-          userId
-        }
-      })
-    }
+  addLike = async (postId, userId, likes) => {
+    await this.likesModel.create(
+      { userId, postId }
+    );
+    await this.postsModel.update(
+      { likes: likes += 1 },
+      { where: { postId } }
+    )
 
-    else {
-      await this.postsModel.update(
-        {
-          likes: likes += 1
-        },
-        {
-          where: {
-            postId
-          }
-        }
-      )
-      await this.likesModel.create({
-        userId,
-        postId
-      })
-    }
+    return;
+  }
+
+  deleteLike = async (postId, userId, likes) => {
+    await this.likesModel.destroy(
+      { where: { postId, userId } }
+    );
+    await this.postsModel.update(
+      { likes: likes -= 1 },
+      { where: { postId } }
+    )
+
+    return;
   }
 }
 

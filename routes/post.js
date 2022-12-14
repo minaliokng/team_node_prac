@@ -14,8 +14,8 @@ router.post('/', authMiddleWare, postsController.createPost);
 router.get('/like', authMiddleWare, postsController.getLike);
 
 router.get('/:postId', postsController.getPostInfo);
-router.put('/:postId', authMiddleWare, isPoster, postsController.updatePost);
-router.delete('/:postId', authMiddleWare, isPoster, postsController.deletePost);
+router.put('/:postId', authMiddleWare, postsController.updatePost);
+router.delete('/:postId', authMiddleWare, postsController.deletePost);
 
 router.put('/:postId/like', authMiddleWare, postsController.updateLike);
 
