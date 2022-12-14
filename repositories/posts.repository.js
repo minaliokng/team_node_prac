@@ -1,13 +1,15 @@
-const { Post, Like } = require("../models");
-
 class PostRepository {
+  constructor(PostsModel, LikesModel) {
+    this.postsModel = PostsModel;
+    this.likesModel = LikesModel;
+  }
+
   findAllPost = async () => {
-    return await Post.findAll();
+    return await this.postsModel.findAll({attribute: {}});
   }
 
   createPost = async (userId, title, content) => {
-    console.log(userId, title, content)
-    return await Post.create({
+    return await this.postsModel.create({
       userId,
       title,
       content
@@ -15,15 +17,14 @@ class PostRepository {
   }
 
   getLike = async (userId) => {
-    console.log(userId)
-    const likes = await Like.findAll({
+    const likes = await this.likesModel.findAll({
       where: {
         userId
       }
     })
 
     return await Promise.all(likes.map(a => {
-      return Post.findOne({
+      return this.postsModel.findOne({
         where: {
           postId: a.dataValues.postId
         }
@@ -32,7 +33,7 @@ class PostRepository {
   }
 
   getOneLike = async (postId, userId) => {
-    return await Like.findOne({
+    return await this.likesModel.findOne({
       where: {
         postId,
         userId
@@ -41,13 +42,13 @@ class PostRepository {
   }
 
   getOnePost = async (postId) => {
-    return await Post.findOne({
+    return await this.postsModel.findOne({
       where: { postId }
     });
   }
 
   updatePost = async (postId, title, content) => {
-    return await Post.update(
+    return await this.postsModel.update(
       {
         title,
         content
@@ -59,7 +60,7 @@ class PostRepository {
   }
 
   deletePost = async (postId) => {
-    return await Post.destroy(
+    await this.postsModel.destroy(
       {
         where: { postId }
       }
@@ -67,9 +68,8 @@ class PostRepository {
   }
 
   updateLike = async (postId, likes, stat, userId) => {
-    console.log(likes)
     if(stat == -1) {
-      await Post.update(
+      await this.postsModel.update(
         {
           likes: likes -= 1
         },
@@ -79,15 +79,16 @@ class PostRepository {
           }
         }
       )
-      await Like.destroy({
+      await this.likesModel.destroy({
         where: {
           postId,
           userId
         }
       })
     }
+
     else {
-      await Post.update(
+      await this.postsModel.update(
         {
           likes: likes += 1
         },
@@ -97,7 +98,7 @@ class PostRepository {
           }
         }
       )
-      await Like.create({
+      await this.likesModel.create({
         userId,
         postId
       })

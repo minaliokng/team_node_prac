@@ -1,8 +1,9 @@
 const { json } = require('sequelize');
 const PostRepository = require('../repositories/posts.repository');
+const { Post, Like } = require("../models");
 
 class PostService {
-  postRepository = new PostRepository();
+  postRepository = new PostRepository(Post, Like);
 
   findAllPost = async () => {
     return await this.postRepository.findAllPost();

@@ -1,6 +1,4 @@
 const PostService = require('../services/posts.service');
-
-const {Post, Like} = require('../models');
 const jwt = require("jsonwebtoken")
 class PostsController {
   postService = new PostService();
@@ -15,7 +13,7 @@ class PostsController {
 
   createPost = async (req, res, next) => {
     try {
-      await this.postService.createPost(res.locals.user.dataValues.userId, req.body.title, req.body.content);
+      await this.postService.createPost(res.locals.userId, req.body.title, req.body.content);
       res.status(200).send('게시글작성 성공~!');
     } catch (err) {
       console.error(err);
@@ -25,7 +23,7 @@ class PostsController {
 
   getLike = async (req, res, next) => {
     try {
-      return res.status(200).json({ Data: await this.postService.getLike(res.locals.user.dataValues.userId) });
+      return res.status(200).json({ Data: await this.postService.getLike(res.locals.userId) });
     } catch (err) {
       console.error(err);
       next(err);
@@ -66,7 +64,7 @@ class PostsController {
 
   updateLike = async (req, res, next) => {
     try {
-      const data = await this.postService.updateLike(req.params.postId, res.locals.user.dataValues.userId);
+      const data = await this.postService.updateLike(req.params.postId, res.locals.userId);
       return res.status(200).json(data)
     } catch (err) {
       console.error(err);

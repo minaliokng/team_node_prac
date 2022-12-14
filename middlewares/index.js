@@ -20,7 +20,7 @@ module.exports = async function authMiddleWare(req, res, next) {
     });
 
     if (user) {
-      res.locals.user = user;
+      res.locals.userId = user.userId;
       next();
     } else {
       return res.send('잘못된 접속경로인데?')

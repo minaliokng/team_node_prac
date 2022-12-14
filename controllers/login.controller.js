@@ -10,7 +10,6 @@ class LoginController {
     try {
       const {nickname, password} = req.body;
 
-      console.log(nickname, password)
       let user
       if(nickname && password) user =  await User.findOne({
         where: {

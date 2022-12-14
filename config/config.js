@@ -1,22 +1,20 @@
 require("dotenv").config();
 
-const DBAddress = process.env.DBAddress;
-const DBHost = process.env.DBHost;
-const DBPw = process.env.DBPw;
+const {DBAddress, DBHost, DBPw, DB_dev, DB_test} = process.env;
 
 module.exports = {
   "development": {
     "username": DBHost,
     "password": DBPw,
-    "database": "sparta",
+    "database": DB_dev,
     "host": DBAddress,
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
+    "username": DBHost,
+    "password": DBPw,
+    "database": DB_test,
+    "host": DBAddress,
     "dialect": "mysql"
   },
   "production": {

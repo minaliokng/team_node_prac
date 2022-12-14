@@ -8,7 +8,7 @@ const postsController = new PostsController();
 
 const router = express.Router();
 
-router.get('/', postsController.getPosts);
+router.get('/', authMiddleWare, postsController.getPosts);
 router.post('/', authMiddleWare, postsController.createPost);
 
 router.get('/like', authMiddleWare, postsController.getLike);
