@@ -33,6 +33,7 @@ class PostsController {
   }
 
   getPostInfo = async (req, res, next) => {
+    console.log('req.paramsz', req.params)
     try {
       const post = await this.postService.getOnePost(req.params.postId);
       res.status(200).json({ Data: post });

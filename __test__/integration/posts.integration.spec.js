@@ -25,6 +25,8 @@ let res = {
 };
 
 
+
+
 describe('Layered Architecture Pattern, Posts Domain Integration Test', () => {
 
   test('GET /posts API (getPosts) Integration Test Success Case, Not Found Posts Data', async () => {
@@ -32,15 +34,31 @@ describe('Layered Architecture Pattern, Posts Domain Integration Test', () => {
       .get(`/posts`) // API의 HTTP Method & URL
 
     expect(response.status).toEqual(201);
-    expect(response.body).toEqual({ Data: [] })
+    // expect(response.body).toEqual({ "Data": [] })
   });
 
-  test('POST /posts API (createPost) Integration Test Success Case', async () => {
+  // test('POST /posts API (createPost) Integration Test Success Case', async () => {
 
+  //   req.cookies = {
+  //     token:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
+  //   }
+  //   const createPostRequestBodyParams = {
+  //     title: "title",
+  //     content: "content"
+  //   };
+
+  //   const response = await supertest(app).post('/posts').set('cookie', `token=${req.cookies.token}`).send(createPostRequestBodyParams)
+
+  //   expect(response.status).toEqual(200);
+  //   expect(response.body).toEqual({ message: '게시글작성 성공~!' })
+  // });
+
+
+
+  test('POST /api/posts API (createPost) Integration Test Error Case, Invalid Params Error', async () => {
     req.cookies = {
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
-    }
+    };
     const createPostRequestBodyParams = {
       title: "title",
       content: "content"
@@ -48,17 +66,49 @@ describe('Layered Architecture Pattern, Posts Domain Integration Test', () => {
 
     const response = await supertest(app).post('/posts').set('cookie', `token=${req.cookies.token}`).send(createPostRequestBodyParams)
 
+    expect(response.status).toEqual(402);
+    expect(response.body).toEqual({
+      errorMessage: '로그인 후 사용가능합니다.'
+    })
+  });
+
+  test('POST /api/posts API (createPost) Integration Test Error Case, Invalid Data(title,content) Error', async () => {
+    req.cookies = {
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
+    }
+    const createPostRequestBodyParams = {
+      title: "",
+      content: ""
+    };
+
+    const response = await supertest(app).post('/posts').set('cookie', `token=${req.cookies.token}`).send(createPostRequestBodyParams)
+
+    expect(response.status).toEqual(400);
+    expect(response.body).toEqual({ "errorMessage": "errorMessage" });
+  });
+
+  test('GET /api/posts/:like API (createPost) Integration Test Success Case', async () => {
+    const response = await supertest(app).get('/posts/1').query(1)
+
     expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      Data: {
+        "content": "content1",
+        "created_at": "2022-12-13T08:10:07.000Z",
+        "likes": 0,
+        "postId": 1,
+        "title": "title1",
+        "userId": 1,
+      }
+    });
   });
 
+  test('GET /api/posts/:like API (createPost) Integration Test Fail Case no exist post', async () => {
+    const response = await supertest(app).get('/posts/3')
 
-
-  test('POST /api/posts API (createPost) Integration Test Error Case, Invalid Params Error', async () => {
-    // TODO: 여기에 코드를 작성해야합니다.
-  });
-
-  test('GET /api/posts API (getPosts) Integration Test Success Case, is Exist Posts Data', async () => {
-    // TODO: 여기에 코드를 작성해야합니다.
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ Data: null });
   });
 });
 

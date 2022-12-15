@@ -46,9 +46,11 @@ class PostRepository {
   }
 
   getOnePost = async (postId) => {
-    return await this.postsModel.findOne({
+    let post = await this.postsModel.findOne({
       where: { postId }
     });
+    console.log('zzzddd', post)
+    return post
   }
 
   updatePost = async (postId, title, content) => {
