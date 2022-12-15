@@ -13,7 +13,8 @@ class PostsController {
     }
   }
 
-  createPost = async (req, res, next) => {
+  createPost = async (req, res) => {
+    console.log('reszzz', res.locals.user.dataValues)
     try {
       await this.postService.createPost(res.locals.user.dataValues.userId, req.body.title, req.body.content);
       res.status(200).json({ message: '게시글작성 성공~!' });

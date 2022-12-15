@@ -9,7 +9,8 @@
     "test:silent": "jest --silent --forceExit",
     "test:coverage": "jest --coverage --forceExit",
     "test:unit": "jest __test__/unit --forceExit",
-    "test:integration": "jest __test__/integration --forceExit"
+    "test:integration": "jest __test__/integration --forceExit",
+    "logging": "false"
   },
   "author": "",
   "license": "ISC",
