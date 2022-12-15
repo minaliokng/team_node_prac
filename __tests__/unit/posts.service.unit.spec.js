@@ -126,10 +126,13 @@ describe('Layered Architecture Pattern Posts Service Unit Test', () => {
       return {
         likes: data.likes
       }
+
+      // return null;
     })
     const postLiked = await postService.updateLike(data.postId, data.userId);
 
+    // expect(postLiked).toEqual
     // expect(postLiked).toEqual({ message: "게시글의 좋아요를 취소하였습니다." });
-    expect(postLiked).toEqual({ message: "게시글의 좋아요를 등록하였습니다." });
+    expect(postLiked).toEqual({ message: "게시글의 좋아요를 등록하였습니다.", code: 200 });
   })
 });

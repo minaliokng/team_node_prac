@@ -45,7 +45,7 @@ describe('Layered Architecture Pattern Posts Controller Unit Test', () => {
 
     expect(mockResponse.status).toHaveBeenCalledWith(201);
     expect(mockResponse.json).toHaveBeenCalledWith({
-      Data: ["post Data"],
+      data: ["post Data"],
     });
   });
 
@@ -74,7 +74,7 @@ describe('Layered Architecture Pattern Posts Controller Unit Test', () => {
 
     await postsController.createPost(mockRequest, mockResponse, next);
 
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
+    expect(mockResponse.status).toHaveBeenCalledWith(400);
     expect(mockResponse.json).toHaveBeenCalledWith({
       errorMessage: '잘못된 형식입니다.',
     });
@@ -141,7 +141,7 @@ describe('Layered Architecture Pattern Posts Controller Unit Test', () => {
 
   test('posts.controller.updateLike', async () => {
     mockPostService.updateLike = jest.fn(() => {
-      return { message: "게시글의 좋아요를 취소하였습니다." }
+      return { message: "게시글의 좋아요를 취소하였습니다." , code: 200}
     })
     
     await postsController.updateLike(mockRequest, mockResponse, next);
@@ -151,8 +151,4 @@ describe('Layered Architecture Pattern Posts Controller Unit Test', () => {
       message: "게시글의 좋아요를 취소하였습니다."
     });
   })
-
-  // test('posts.controller.createPost', async () => {
-    
-  // })
 });

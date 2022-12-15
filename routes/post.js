@@ -1,5 +1,4 @@
 const express = require('express');
-const isPoster = require("../middlewares/isPoster.js")
 
 const authMiddleWare = require('../middlewares/index');
 
@@ -8,7 +7,7 @@ const postsController = new PostsController();
 
 const router = express.Router();
 
-router.get('/', authMiddleWare, postsController.getPosts);
+router.get('/', postsController.getPosts);
 router.post('/', authMiddleWare, postsController.createPost);
 
 router.get('/like', authMiddleWare, postsController.getLike);

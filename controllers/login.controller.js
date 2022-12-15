@@ -21,10 +21,12 @@ class LoginController {
         return res.status(400).send('닉네임 또는 패스워드를 확인해주세요. ^_^;')
       }
 
+      console.log(user)
+
       const token = jwt.sign({ userId: user.dataValues.userId }, 'sparta')
+      console.log(token)
       // return res.status(200).send({ token: jwt.sign({ userId: user.nickname }, process.env.MY_SECRET_KEY) })
-      res.cookie('token', token, { httpOnly: true, });
-      res.json({ 'token': token })
+      return res.cookie('token', token, { httpOnly: true, }).json({ 'token': token })
 
     } catch (err) {
       next('로그인에 실패했습니다.');

@@ -5,10 +5,9 @@ module.exports = async function authMiddleWare(req, res, next) {
   const authorization = req.cookies.token;
 
   if (!authorization) {
-    res.status(400).json({
+    return res.status(400).json({
       errorMessage: "로그인 후 사용해주세요."
     });
-    return;
   }
 
   try {
@@ -27,7 +26,7 @@ module.exports = async function authMiddleWare(req, res, next) {
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({
+    return res.status(400).json({
       errorMessage: '로그인 후 사용가능합니다.'
     })
   }

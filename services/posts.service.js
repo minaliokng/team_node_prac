@@ -29,6 +29,10 @@ class PostService {
   }
 
   updatePost = async (userId, postId, title, content) => {
+    if(!title || !content) return{message: "잘못된 형식입니다.", code: 400}
+
+    if(!(await this.getOnePost(postId))) throw null;
+
     if(await this.isMine(userId, postId)){
       await this.postRepository.updatePost(postId, title, content);
       return {message: "수정 성공", code: 200};
@@ -57,14 +61,15 @@ class PostService {
     const likeExists = await this.postRepository.getOneLike(postId, userId);
     const post = await this.postRepository.getOnePost(postId);
 
+    if(!post) return {message: "존재하지 않는 게시글입니다.", code: 404 }
     if (likeExists) {
       await this.deleteLike(postId, userId, post.likes);
 
-      return { message: "게시글의 좋아요를 취소하였습니다." };
+      return { message: "게시글의 좋아요를 취소하였습니다." , code: 200 };
     } else {
       await this.addLike(postId, userId, post.likes);
 
-      return { message: "게시글의 좋아요를 등록하였습니다." };
+      return { message: "게시글의 좋아요를 등록하였습니다." , code: 200 };
     }
   }
 }
