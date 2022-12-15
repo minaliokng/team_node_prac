@@ -17,7 +17,7 @@ module.exports = class Comment extends Sequelize.Model {
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      usersId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

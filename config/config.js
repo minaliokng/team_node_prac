@@ -13,10 +13,10 @@ module.exports = {
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": null,
+    "username": DBHost,
+    "password": DBPw,
     "database": "database_test",
-    "host": "127.0.0.1",
+    "host": DBAddress,
     "dialect": "mysql"
   },
   "production": {
