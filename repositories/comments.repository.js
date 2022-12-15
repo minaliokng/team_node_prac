@@ -13,7 +13,7 @@ class CommentRepository {
             where: { commentId :commentId.commentId },
         })
     }
-
+// 수정
     createComment = async (userId, postId, comment) => {
         return await this.commentsModel.create({
             userId, 
