@@ -6,5 +6,4 @@ const loginController = new LoginController();
 
 router.post('/', loginController.login);
 
-
 module.exports = router;

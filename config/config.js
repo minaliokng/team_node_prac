@@ -1,16 +1,22 @@
-{
+require("dotenv").config();
+
+const DBAddress = process.env.DBAddress;
+const DBHost = process.env.DBHost;
+const DBPw = process.env.DBPw;
+
+module.exports = {
   "development": {
-    "username": "root",
-    "password": "gkftndlTek1!",
+    "username": DBHost,
+    "password": DBPw,
     "database": "sparta",
-    "host": "express-database.cmolhyykqhlv.ap-northeast-2.rds.amazonaws.com",
+    "host": DBAddress,
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
-    "password": null,
+    "username": DBHost,
+    "password": DBPw,
     "database": "database_test",
-    "host": "127.0.0.1",
+    "host": DBAddress,
     "dialect": "mysql"
   },
   "production": {

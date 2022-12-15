@@ -1,32 +1,21 @@
-// const PostService = require('../services/posts.service');
+const PostService = require('../services/posts.service');
 
-const Post = require('../models/post');
-const Like = require("../models/like");
+const {Post, Like} = require('../models');
 const jwt = require("jsonwebtoken")
-
 class PostsController {
-  //postService = new PostService(); // Post 서비스를 클래스를 컨트롤러 클래스의 멤버 변수로 할당합니다.
+  postService = new PostService();
 
   getPosts = async (req, res, next) => {
     try {
-      const posts = await Post.findAll({})
-      res.status(201).json(posts);
+      return res.status(201).json({ Data: await this.postService.findAllPost() });
     } catch (err) {
-      console.error(err);
       next(err);
     }
   }
 
   createPost = async (req, res, next) => {
-    const authorization = req.cookies.token;
-
-    const userId = jwt.verify(authorization, "sparta")
     try {
-      const post = await Post.create({
-        title: req.body.title,
-        content: req.body.content,
-        poster: userId.userId
-      })
+      await this.postService.createPost(res.locals.user.dataValues.userId, req.body.title, req.body.content);
       res.status(200).send('게시글작성 성공~!');
     } catch (err) {
       console.error(err);
@@ -35,25 +24,8 @@ class PostsController {
   }
 
   getLike = async (req, res, next) => {
-    const authorization = req.cookies.token;
-
-    const userId = jwt.verify(authorization, "sparta")
-
-    let data = []
     try {
-      const likes = await Like.findAll({
-        where: {
-          likerId: userId.userId
-        }
-      })
-      const a = await Promise.all(likes.map(a => {
-        return Post.findOne({
-          where: {
-            id: a.dataValues.postId
-          }
-        })
-      }))
-      res.status(200).send(a)
+      return res.status(200).json({ Data: await this.postService.getLike(res.locals.user.dataValues.userId) });
     } catch (err) {
       console.error(err);
       next(err);
@@ -62,13 +34,9 @@ class PostsController {
 
   getPostInfo = async (req, res, next) => {
     try {
-      const post = await Post.findOne({
-        where: {
-          id: req.params.postId
-        }
-      })
+      const post = await this.postService.getOnePost(req.params.postId);
 
-      res.status(200).json(post);
+      res.status(200).json({ Data: post });
     } catch (err) {
       console.error(err);
       next(err);
@@ -76,30 +44,9 @@ class PostsController {
   }
 
   updatePost = async (req, res, next) => {
-    const authorization = req.cookies.token;
-
-    const userId = jwt.verify(authorization, "sparta")
-    const post = await Post.findOne({
-      where: {
-        id: req.params.postId
-      }
-    })
     try {
-      if (userId.userId == post.id) {
-        await Post.update(
-          {
-            title: req.body.title,
-            content: req.body.content
-          },
-          {
-            where: { id: req.params.postId }
-          }
-        )
-        res.status(200).json('변경 성공');
-      } else {
-        res.status(400).send("작성자만 변경 가능합니다.")
-      }
-
+      await this.postService.updatePost(req.params.postId, req.body.title, req.body.content);
+      res.status(200).send('수정 성공~!');
     } catch (err) {
       console.error(err);
       next(err);
@@ -107,84 +54,20 @@ class PostsController {
   }
 
   deletePost = async (req, res, next) => {
-    const authorization = req.cookies.token;
-
-    const userId = jwt.verify(authorization, "sparta")
-    const post = await Post.findOne({
-      where: {
-        id: req.params.postId
-      }
-    })
     try {
-      if (userId.userId == post.id) {
-        await Post.destroy(
-          {
-            where: { id: req.params.postId }
-          }
-        )
-        res.status(200).json('삭제 성공');
-      } else {
-        res.status(400).send("작성자만 삭제 가능합니다.")
-      }
-
-    } catch (err) {
+      await this.postService.deletePost(req.params.postId);
+      res.status(200).json('삭제 성공');
+    }
+    catch (err) {
       console.error(err);
       next(err);
     }
   }
 
-  putLike = async (req, res, next) => {
-    const authorization = req.cookies.token;
-
-    const userId = jwt.verify(authorization, "sparta")
+  updateLike = async (req, res, next) => {
     try {
-      const likeExists = await Like.findOne({
-        where: {
-          likerId: userId.userId,
-          postId: req.params.postId
-        }
-      })
-      const post = await Post.findOne({
-        where: {
-          id: req.params.postId
-        }
-      })
-      if (likeExists) {
-        await Post.update(
-          {
-            likes: post.likes -= 1
-          },
-          {
-            where: {
-              id: likeExists.postId
-            }
-          }
-        )
-        await Like.destroy({
-          where: {
-            id: likeExists.id
-          }
-        })
-
-        res.status(200).send('좋아요취소!');
-      } else {
-        await Post.update(
-          {
-            likes: post.likes += 1
-          },
-          {
-            where: {
-              id: req.params.postId
-            }
-          }
-        )
-        const like = await Like.create({
-          likerId: userId.userId,
-          postId: req.params.postId
-        })
-        res.status(200).send(like);
-      }
-
+      const data = await this.postService.updateLike(req.params.postId, res.locals.user.dataValues.userId);
+      return res.status(200).json(data)
     } catch (err) {
       console.error(err);
       next(err);

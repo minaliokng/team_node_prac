@@ -1,74 +1,83 @@
-const Comment = require('../models/comment');
+const CommentService = require('../services/comments.service');
+const { Post, Comment } = require('../models')
 const jwt = require('jsonwebtoken')
 
 class CommentController {
-  //postService = new PostService();
+  commentService = new CommentService();
 
-  getComments = async (req, res, next) => {
+  getComments = async ( req, res, next ) => {
     try {
-      const comments = await Comment.findAll({
-        where: {
-          posts_id: req.params.postId
-        },
-        attributes: ['comment', 'created_at']
-      })
-      if (comments.length == 0) {
-        return res.status(400).send('존재하지 않는 게시물입니다.')
-      }
-      res.status(200).json(comments);
+      return res.status(200).json({ Data : await this.commentService.getComments() })
+    
     } catch (err) {
-      console.error(err);
-      next(err);
+      next(err)
     }
   }
 
-  createComment = async (req, res, next) => {
-    const { authorization } = req.headers;
-    const [authType, authToken] = authorization.split(" ");
-    const userId = jwt.verify(authToken, "sparta")
-
+  createComment = async ( req, res, next ) => {
     try {
-      const comment = await Comment.create({
-        comment: req.body.comment,
-        posts_id: req.params.postId,
-        users_id: userId.userId
-      })
-      res.status(200).send(comment);
+      const userId = res.locals.userId
+      const postId = req.params.body
+      const { comment } = req.body
+      
+      if (!res.body.comment){
+        res.status(412).json({ errorMessage : '잘못된 형식입니다.'})
+        throw new Error('InvalidParamsError')
+      }
+      
+      if (!req.params.postId){
+        res.status(404).json({ errorMessage : '존재하지 않는 게시글입니다.'})
+        throw new Error('InvalidParamsError')
+      }
+      
+      await this.commentService.createComment(userId, postId, comment)
+      return res.status(201).send('댓글작성 성공~!')
+    
     } catch (err) {
-      console.error(err);
-      next(err);
+      next(err)
     }
   }
 
   updateComment = async (req, res, next) => {
     try {
-      const comment = await Comment.update(
-        {
-          comment: req.body.comment,
-        },
-        {
-          where: {
-            id: req.params.commentId
-          }
-        }
-      )
-      res.status(200).send('수정 성공~!');
+
+      const userId = res.locals.userId
+      const postId = req.params
+      const { comment } = req.body
+      
+      if (!comment){
+        res.status(412).json({ errorMessage : '잘못된 형식입니다.'})
+        throw new Error('InvalidParamsError')
+      }
+      else if (!postId){
+        res.status(404).json({ errorMessage : '존재하지 않는 게시글입니다.'})
+        throw new Error('InvalidParamsError')
+      }
+      else {
+        await this.commentService.updateComment(userId, postId, comment)
+        return res.status(201).send('댓글수정 성공~!')
+      }
+      
     } catch (err) {
-      console.error(err);
-      next(err);
+      console.error(err)
+      next(err)
     }
   }
 
-  deteleComment = async (req, res, next) => {
-    console.log(req.headers.authorization);
+  deleteComment = async ( req, res, next) => {
     try {
-      await Comment.destroy({
-        where: { id: req.params.commentId }
-      })
-      res.status(200).send('삭제 성공');
+      const userId = res.locals.userId
+      const commentId = req.params.commentId
+
+      if(!commentId){
+        res.status(404).json({ errorMessage : '존재하지 않는 댓글입니다.'})
+      }
+
+      await this.commentService.deleteComment(userId, commentId)
+      return res.status(201).send('댓글삭제 성공~!')
+    
     } catch (err) {
-      console.error(err);
-      next(err);
+      next(err)
     }
   }
 }

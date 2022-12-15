@@ -40,7 +40,9 @@ app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
-// app.use('/users',)
+app.get('/logout', (req, res) => {
+  return res.clearCookie('token').end();
+});
 
 
 app.use((req, res, next) => {
