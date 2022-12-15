@@ -88,8 +88,9 @@ describe('Layered Architecture Pattern, Posts Domain Integration Test', () => {
     expect(response.body).toEqual({ "errorMessage": "errorMessage" });
   });
 
-  test('GET /api/posts/:like API (createPost) Integration Test Success Case', async () => {
-    const response = await supertest(app).get('/posts/1').query(1)
+  test('GET /api/posts/:postId API (createPost) Integration Test Success Case', async () => {
+
+    const response = await supertest(app).get('/posts/1')
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
@@ -104,11 +105,50 @@ describe('Layered Architecture Pattern, Posts Domain Integration Test', () => {
     });
   });
 
-  test('GET /api/posts/:like API (createPost) Integration Test Fail Case no exist post', async () => {
+  test('GET /api/posts/:postId API (createPost) Integration Test Fail Case no exist post', async () => {
     const response = await supertest(app).get('/posts/3')
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({ Data: null });
+  });
+
+  test('PUT posts/:postId API (createPost) Integration Test Success Case', async () => {
+    const createPostRequestBodyParams = {
+      title: "title1",
+      content: "content1"
+    };
+    req.cookies = {
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
+    }
+    const response = await supertest(app).put('/posts/1').set('cookie', `token=${req.cookies.token}`).send(createPostRequestBodyParams)
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ 'message': '수정 성공~!' });
+  });
+
+  test('PUT posts/:postId API (createPost) Integration Test Fail Case, invalid Error', async () => {
+    const createPostRequestBodyParams = {
+      title: "",
+      content: ""
+    };
+    req.cookies = {
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
+    }
+    const response = await supertest(app).put('/posts/1').set('cookie', `token=${req.cookies.token}`).send(createPostRequestBodyParams)
+
+    expect(response.status).toEqual(500);
+  });
+
+  test('DELETE posts/:postId API (createPost) Integration Test Success Case,', async () => {
+    req.cookies = {
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcxMDAyNjU5fQ.TpYMWxgOOwv2jQtj73B_mqlgwCfEifWuBKG6Fh-8bF4'
+    }
+    const response = await supertest(app).del('/posts/1').set('cookie', `token=${req.cookies.token}`)
+
+    expect(response.status).toEqual(200);
   });
 });
 

@@ -54,7 +54,7 @@ class PostRepository {
   }
 
   updatePost = async (postId, title, content) => {
-    return await this.postsModel.update(
+    let data = await this.postsModel.update(
       {
         title,
         content
@@ -63,6 +63,8 @@ class PostRepository {
         where: { postId }
       }
     )
+
+    return data;
   }
 
   deletePost = async (postId) => {

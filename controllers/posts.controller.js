@@ -46,7 +46,7 @@ class PostsController {
   updatePost = async (req, res, next) => {
     try {
       await this.postService.updatePost(req.params.postId, req.body.title, req.body.content);
-      res.status(200).send('수정 성공~!');
+      res.status(200).json({ 'message': '수정 성공~!' });
     } catch (err) {
       next(err);
     }
